@@ -1,0 +1,10 @@
+{
+  "name": "alquileres-andalucia",
+  "version": "1.0.0",
+  "description": "Portal de alquileres asequibles en Andalucia - alquileresandalucia.es",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "serve": "node serve.js"
+  }
+}
