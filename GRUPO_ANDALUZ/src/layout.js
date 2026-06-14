@@ -98,6 +98,13 @@ function renderLayout({ title, description, content, activeHref = '', extraHead 
       <p>&copy; ${new Date().getFullYear()} Grupo Nacionalista Andaluz. Andalucía primero. Siempre.</p>
     </div>
   </footer>
+  <script>
+    fetch('https://api.alquileresandalucia.es/api/stats/visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site: 'gruponacionalistaandaluz.com', page: location.pathname })
+    }).catch(function(){});
+  </script>
 </body>
 </html>`;
 }

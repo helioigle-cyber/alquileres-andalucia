@@ -95,6 +95,13 @@ function renderLayout({ title, description, content, activeHref = '', extraHead 
       <p>&copy; ${new Date().getFullYear()} Alquileres Andalucía. Todos los derechos reservados.</p>
     </div>
   </footer>
+  <script>
+    fetch('https://api.alquileresandalucia.es/api/stats/visit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ site: 'alquileresandalucia.es', page: location.pathname })
+    }).catch(function(){});
+  </script>
 </body>
 </html>`;
 }
