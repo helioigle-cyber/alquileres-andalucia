@@ -215,6 +215,78 @@ section h2.left { text-align: left; }
 .join-form button:hover { background: var(--green-dark); }
 .form-note { font-size: 0.85rem; color: var(--gray); margin-top: 8px; }
 
+/* FAQ con IA */
+.faq-box {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.faq-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.faq-suggestions button {
+  background: var(--green-light);
+  color: var(--green-dark);
+  border: 1px solid var(--green);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.faq-suggestions button:hover { background: var(--green); color: var(--white); }
+.faq-input-row {
+  display: flex;
+  gap: 10px;
+}
+.faq-input-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: inherit;
+}
+.faq-input-row button {
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.faq-input-row button:hover { background: var(--green-dark); }
+.faq-input-row button:disabled { opacity: 0.6; cursor: default; }
+.faq-answer {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--green-light);
+  border-radius: var(--radius);
+  color: var(--green-dark);
+  white-space: pre-wrap;
+  display: none;
+}
+.faq-answer.visible { display: block; }
+.faq-loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--green-light);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: faq-spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+@keyframes faq-spin { to { transform: rotate(360deg); } }
+
 /* Donations */
 .donation-box {
   max-width: 560px;

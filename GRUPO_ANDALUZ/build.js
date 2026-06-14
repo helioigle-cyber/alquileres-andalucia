@@ -55,8 +55,12 @@ function loadMarkdownFile(filePath) {
 }
 
 // ── Limpiar dist ───────────────────────────────────────────────────────────
-fs.rmSync(DIST, { recursive: true, force: true });
+// Se borra el contenido en lugar del directorio (OneDrive puede mantener un
+// handle abierto sobre la carpeta dist y provocar EPERM al eliminarla).
 fs.mkdirSync(DIST, { recursive: true });
+for (const entry of fs.readdirSync(DIST)) {
+  fs.rmSync(path.join(DIST, entry), { recursive: true, force: true });
+}
 
 // ── Copiar estáticos ──────────────────────────────────────────────────────
 copyDir(path.join(ROOT, 'public'), DIST);
@@ -64,6 +68,67 @@ copyDir(path.join(ROOT, 'public'), DIST);
 // ── Cargar contenido ──────────────────────────────────────────────────────
 const posts = loadMarkdownDir(path.join(ROOT, 'content', 'blog'));
 const manifiesto = loadMarkdownFile(path.join(ROOT, 'content', 'manifiesto.md'));
+
+// ── FAQ con IA ──────────────────────────────────────────────────────────────
+const FAQ_PREGUNTAS = [
+  '¿Qué es el Grupo Nacionalista Andaluz?',
+  '¿Cómo puedo unirme?',
+  '¿Cuáles son vuestros objetivos?',
+  '¿Es necesaria formación universitaria?',
+  '¿Tenéis sede en mi provincia?',
+];
+
+function faqSection(idSuffix) {
+  const sugerencias = FAQ_PREGUNTAS.map(p =>
+    `<button type="button" onclick='faqAsk${idSuffix}(${JSON.stringify(p)})'>${p}</button>`
+  ).join('\n              ');
+
+  return `
+    <section class="section-alt">
+      <div class="container">
+        <h2 style="text-align:center;">¿Tienes alguna pregunta?</h2>
+        <div class="faq-box">
+          <div class="faq-suggestions">
+              ${sugerencias}
+          </div>
+          <div class="faq-input-row">
+            <input type="text" id="faq-input${idSuffix}" placeholder="Escribe tu pregunta aquí..." />
+            <button type="button" id="faq-btn${idSuffix}" onclick="faqAsk${idSuffix}()">Preguntar</button>
+          </div>
+          <div class="faq-answer" id="faq-answer${idSuffix}"></div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      async function faqAsk${idSuffix}(pregunta) {
+        const input = document.getElementById('faq-input${idSuffix}');
+        const btn = document.getElementById('faq-btn${idSuffix}');
+        const answer = document.getElementById('faq-answer${idSuffix}');
+        const q = pregunta || input.value.trim();
+        if (!q) return;
+        input.value = q;
+        btn.disabled = true;
+        answer.classList.add('visible');
+        answer.innerHTML = '<span class="faq-loading"></span> Pensando...';
+        try {
+          const res = await fetch('https://api.alquileresandalucia.es/api/grupoandaluz/faq', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pregunta: q }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Error');
+          answer.textContent = data.respuesta;
+        } catch (err) {
+          answer.textContent = 'No se pudo obtener una respuesta. Inténtalo de nuevo más tarde.';
+        } finally {
+          btn.disabled = false;
+        }
+      }
+    </script>
+  `;
+}
 
 // ── Página de inicio ───────────────────────────────────────────────────────
 function pageIndex() {
@@ -123,6 +188,8 @@ function pageIndex() {
         </div>
       </div>
     </section>
+
+    ${faqSection('Home')}
 
     <section>
       <div class="container" style="text-align:center;">
@@ -326,6 +393,8 @@ function pageUnete() {
         }
       });
     </script>
+
+    ${faqSection('Unete')}
   `;
 
   writeFile('unete.html', renderLayout({
