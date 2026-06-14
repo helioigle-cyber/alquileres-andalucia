@@ -399,15 +399,38 @@ function pageContacto() {
         <div class="breadcrumbs"><a href="/">Inicio</a> &rsaquo; Contacto</div>
         <h2>Contacto</h2>
         <p>¿Tienes alguna duda, sugerencia o quieres proponer una colaboración? Escríbenos y te responderemos lo antes posible.</p>
-        <form class="contact-form" action="#" method="post">
+        <form class="contact-form" id="contact-form" action="https://api.alquileresandalucia.es/api/alquileres/contacto" method="post">
           <input type="text" name="nombre" placeholder="Nombre" required>
           <input type="email" name="email" placeholder="Correo electrónico" required>
           <textarea name="mensaje" rows="5" placeholder="Tu mensaje" required></textarea>
           <button type="submit">Enviar mensaje</button>
+          <p class="form-note" id="contact-form-status"></p>
         </form>
         ${adBlock('contacto')}
       </div>
     </section>
+
+    <script>
+      document.getElementById('contact-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const status = document.getElementById('contact-form-status');
+        const data = Object.fromEntries(new FormData(form).entries());
+        status.textContent = 'Enviando...';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) throw new Error('Error en el envío');
+          status.textContent = '¡Gracias por tu mensaje! Te responderemos lo antes posible.';
+          form.reset();
+        } catch (err) {
+          status.textContent = 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.';
+        }
+      });
+    </script>
   `;
 
   writeFile('contacto.html', renderLayout({

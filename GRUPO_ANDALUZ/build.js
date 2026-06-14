@@ -245,7 +245,7 @@ function pageUnete() {
           La formación universitaria es obligatoria para los roles de liderazgo,
           pero cualquier persona puede sumarse como simpatizante.
         </p>
-        <form class="join-form" id="join-form">
+        <form class="join-form" id="join-form" action="https://api.alquileresandalucia.es/api/grupoandaluz/unete" method="post">
           <div class="form-grid">
             <div>
               <label for="nombre">Nombre completo *</label>
@@ -306,20 +306,24 @@ function pageUnete() {
     </section>
 
     <script>
-      document.getElementById('join-form').addEventListener('submit', function (e) {
+      document.getElementById('join-form').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;
         const status = document.getElementById('join-form-status');
         const data = Object.fromEntries(new FormData(form).entries());
-        data.fecha = new Date().toISOString();
+        status.textContent = 'Enviando...';
         try {
-          const key = 'gna_simpatizantes';
-          const lista = JSON.parse(localStorage.getItem(key) || '[]');
-          lista.push(data);
-          localStorage.setItem(key, JSON.stringify(lista));
-        } catch (err) {}
-        status.textContent = 'Gracias por tu interés, te contactaremos pronto.';
-        form.reset();
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) throw new Error('Error en el envío');
+          status.textContent = '¡Gracias! Hemos recibido tu adhesión. Te contactaremos pronto.';
+          form.reset();
+        } catch (err) {
+          status.textContent = 'No se pudo enviar el formulario. Inténtalo de nuevo más tarde.';
+        }
       });
     </script>
   `;
@@ -373,7 +377,7 @@ function pageContacto() {
         <p style="text-align:center; color:var(--gray); max-width:640px; margin: 0 auto 30px;">
           ¿Tienes alguna duda, sugerencia o quieres proponer una colaboración? Escríbenos y te responderemos lo antes posible.
         </p>
-        <form class="contact-form" id="contact-form">
+        <form class="contact-form" id="contact-form" action="https://api.alquileresandalucia.es/api/grupoandaluz/contacto" method="post">
           <div>
             <label for="c-nombre">Nombre *</label>
             <input type="text" id="c-nombre" name="nombre" required>
@@ -393,12 +397,24 @@ function pageContacto() {
     </section>
 
     <script>
-      document.getElementById('contact-form').addEventListener('submit', function (e) {
+      document.getElementById('contact-form').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = e.target;
         const status = document.getElementById('contact-form-status');
-        status.textContent = 'Mensaje recibido, te responderemos a la mayor brevedad en helioigle@gmail.com.';
-        form.reset();
+        const data = Object.fromEntries(new FormData(form).entries());
+        status.textContent = 'Enviando...';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) throw new Error('Error en el envío');
+          status.textContent = '¡Gracias por tu mensaje! Te responderemos lo antes posible.';
+          form.reset();
+        } catch (err) {
+          status.textContent = 'No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.';
+        }
       });
     </script>
   `;
