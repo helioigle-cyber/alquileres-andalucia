@@ -1,0 +1,10 @@
+{
+  "name": "grupo-andaluz",
+  "version": "1.0.0",
+  "description": "Sitio del movimiento ciudadano nacionalista andaluz - gruponacionalistaandaluz.com",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "serve": "node serve.js"
+  }
+}

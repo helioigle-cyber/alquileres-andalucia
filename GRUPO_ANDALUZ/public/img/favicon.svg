@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#2d6a4f"/>
+  <!-- Columna izquierda -->
+  <g fill="#ffffff">
+    <rect x="6" y="8" width="16" height="4" rx="1"/>
+    <rect x="8" y="12" width="12" height="3"/>
+    <rect x="10" y="15" width="8" height="34"/>
+    <rect x="8" y="49" width="12" height="3"/>
+    <rect x="6" y="52" width="16" height="4" rx="1"/>
+  </g>
+  <!-- Columna derecha -->
+  <g fill="#ffffff">
+    <rect x="42" y="8" width="16" height="4" rx="1"/>
+    <rect x="44" y="12" width="12" height="3"/>
+    <rect x="46" y="15" width="8" height="34"/>
+    <rect x="44" y="49" width="12" height="3"/>
+    <rect x="42" y="52" width="16" height="4" rx="1"/>
+  </g>
+  <!-- Acanaladuras de las columnas -->
+  <g stroke="#2d6a4f" stroke-width="0.8">
+    <line x1="12" y1="15" x2="12" y2="49"/>
+    <line x1="14.7" y1="15" x2="14.7" y2="49"/>
+    <line x1="17.3" y1="15" x2="17.3" y2="49"/>
+    <line x1="48" y1="15" x2="48" y2="49"/>
+    <line x1="50.7" y1="15" x2="50.7" y2="49"/>
+    <line x1="53.3" y1="15" x2="53.3" y2="49"/>
+  </g>
+</svg>
